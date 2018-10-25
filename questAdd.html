@@ -189,7 +189,6 @@
     <script type="text/javascript">
       var lineData;
 
-      var tabs = document.getElementsByClassName('tab');
       var selectType = document.querySelector('.questType');
       var radioHaveChild = document.querySelector('input.haveChild');
 
@@ -197,18 +196,6 @@
       var childQuestRemove = document.getElementsByClassName('childQuestRemove')[0];
 
       var submit = document.getElementById('submit');
-
-      var tab = 0;
-
-      tabs[0].addEventListener('click', function() {
-        clickTab(0);
-      }, false);
-      tabs[1].addEventListener('click', function() {
-        clickTab(1);
-      }, false);
-      tabs[2].addEventListener('click', function() {
-        clickTab(2);
-      }, false);
 
       selectType.addEventListener('change', function() {
         changeForm();
