@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+    <meta name="viewport" content="width=device-width">
+    <title>クエストの設定</title>
+    <style media="screen">
+      body {
+        margin: 0;
+      }
+      .center {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      }
+      .textCenter {
+        text-align: center;
+      }
+      .flex {
+        display: flex;
+      }
+      .displayNone {
+        display: none;
+      }
+      .widthHundredPercent {
+        width: 100%;
+      }
+
+      .form {
+        padding: 8px;
+      }
+
+      .formTable.parentTable {
+        width: 90%;
+      }
+      .formTable tr td:nth-child(1) {
+        text-align: right;
+      }
+
+      .childTable {
+        border: solid 1px #aaa;
+      }
+
+      #submit {
+        margin: 10px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="form center">
+      <table class="formTable parentTable">
+        <tbody>
+          <tr class="all">
+            <td>種類:</td>
+            <td>
+              <select class="questType widthHundredPercent">
+                <!-- <option value="">選択してください</option> -->
+                <option value="dailyQuests">デイリー</option>
+                <option value="normalQuests">ノーマル</option>
+                <option value="countQuests">カウント</option>
+              </select>
+            </td>
+          </tr>
+          <tr class="all">
+            <td>名前:</td>
+            <td>
+              <input type="text" class="questName widthHundredPercent">
+            </td>
+          </tr>
+          <tr class="all">
+            <td>説明:</td>
+            <td>
+              <input type="text" class="questDescription widthHundredPercent">
+            </td>
+          </tr>
+          <tr class="all">
+            <td>難易度:</td>
+            <td>
+              <select class="questDifficulty widthHundredPercent">
+                <!-- <option value="">選択してください</option> -->
+                <option value="1">★</option>
+                <option value="2">★★</option>
+                <option value="3">★★★</option>
+                <option value="4">★★★★</option>
+              </select>
+            </td>
+          </tr>
+          <tr class="dailyQuests normalQuests">
+            <td>子クエスト:</td>
+            <td>
+              <label>
+                <input type="radio" class="haveChild" name="addHaveChild" checked>
+                <span>なし</span>
+              </label>
+              &nbsp;
+              <label>
+                <input type="radio" class="haveChild" name="addHaveChild">
+                <span>あり</span>
+              </label>
+            </td>
+          </tr>
+          <tr class="dailyQuests normalQuests noneChild">
+            <td>目標回数:</td>
+            <td>
+              <select class="questMaxCount widthHundredPercent">
+                <option>1</option>
+                <option>2</option>
+                <option>3</option>
+                <option>4</option>
+                <option>5</option>
+                <option>6</option>
+                <option>7</option>
+                <option>8</option>
+                <option>9</option>
+                <option>10</option>
+                <option>11</option>
+                <option>12</option>
+                <option>13</option>
+                <option>14</option>
+                <option>15</option>
+                <option>16</option>
+                <option>17</option>
+                <option>18</option>
+                <option>19</option>
+                <option>20</option>
+              </select>
+            </td>
+          </tr>
+          <tr class="dailyQuests normalQuests haveChild childTable displayNone">
+            <td></td>
+            <td>
+              <table class="formTable childTable">
+                <tr>
+                  <td>名前:</td>
+                  <td>
+                    <input type="text" class="questName">
+                  </td>
+                </tr>
+                <tr>
+                  <td>説明:</td>
+                  <td>
+                    <input type="text" class="questDescription">
+                  </td>
+                </tr>
+                <tr class="daily normal">
+                  <td>目標回数:</td>
+                  <td>
+                    <select class="questMaxCount widthHundredPercent">
+                      <option>1</option>
+                      <option>2</option>
+                      <option>3</option>
+                      <option>4</option>
+                      <option>5</option>
+                      <option>6</option>
+                      <option>7</option>
+                      <option>8</option>
+                      <option>9</option>
+                      <option>10</option>
+                      <option>11</option>
+                      <option>12</option>
+                      <option>13</option>
+                      <option>14</option>
+                      <option>15</option>
+                      <option>16</option>
+                      <option>17</option>
+                      <option>18</option>
+                      <option>19</option>
+                      <option>20</option>
+                    </select>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          <tr class="dailyQuests normalQuests haveChild displayNone">
+            <td></td>
+            <td style="text-align: right;">
+              <input type="button" class="childQuestAdd" value="+">
+              <input type="button" class="childQuestRemove" value="-">
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <input type="button" id="submit" value="完了">
+    </div>
+
+    <script src="https://d.line-scdn.net/liff/1.0/sdk.js" charset="utf-8"></script>
+    <script type="text/javascript">
+      liff.init(
+        data => {
+          alert('ok');
+        },
+        err => {
+          alert('error');
+        }
+      );
+    </script>
+  </body>
+</html>
