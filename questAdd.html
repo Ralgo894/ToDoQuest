@@ -304,31 +304,31 @@
       }
 
       function sendData() {
-        var formData = createFormData();
-        var message = createMessage(formData);
-        console.log(message);
-        // liff.init(
-        //   data => {
-        //     alert('ok');
-        //     var formData = createFormData();
-        //     var message = createMessage(formData);
-        //     liff.sendMessages([
-        //       {
-        //         type: 'text',
-        //         text: message
-        //       }
-        //     ])
-        //     .then(() => {
-        //       liff.closeWindow();
-        //     })
-        //     .catch((err) => {
-        //       alert('error liff.sendMessages');
-        //     });
-        //   },
-        //   err => {
-        //     alert('error liff.init');
-        //   }
-        // );
+        // var formData = createFormData();
+        // var message = createMessage(formData);
+        // console.log(message);
+        liff.init(
+          data => {
+            alert('ok');
+            var formData = createFormData();
+            var message = createMessage(formData);
+            liff.sendMessages([
+              {
+                type: 'text',
+                text: message
+              }
+            ])
+            .then(() => {
+              liff.closeWindow();
+            })
+            .catch((err) => {
+              alert('error liff.sendMessages');
+            });
+          },
+          err => {
+            alert('error liff.init');
+          }
+        );
       }
 
       function createFormData() {
