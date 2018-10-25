@@ -309,15 +309,13 @@
           data => {
             alert('ok');
             // var userId = data.userData.context.userId;
-            // // var userData = JSON.stringify(e);
-            // var formData = createFormData();
-            // if (tab = 0) {
-            //   // userData[formData.type].push(formData.quests);
-            // }
+            // var userData = JSON.stringify(e);
+            var formData = createFormData();
+            // userData[formData.type].push(formData.quests);
             liff.sendMessages([
               {
-                type:'text',
-                text:'me'
+                type: 'text',
+                text: JSON.stringify(formData);
               }
             ])
             .then(() => {
@@ -336,47 +334,45 @@
 
       function createFormData() {
         var data = {};
-        if (tab == 0) {
-          data.type = selectType.value;
-          data.quests = {};
-          data.quests.name = (() => {
-            var a = document.querySelector('.parentTable>tbody>tr>td>.questName').value;
-            if (a == '') return ' ';
-            return a;
-          })();
-          data.quests.description = (() => {
-            var a = document.querySelector('.parentTable>tbody>tr>td>.questDescription').value;
-            if (a == '') return ' ';
-            return a;
-          })();
-          data.quests.difficulty = +document.querySelector('.parentTable>tbody>tr>td>.questDifficulty').value;
-          data.quests.count = 0;
-          data.quests.maxCount = 0;
-          data.quests.childQuests = [];
-          data.haveChild = !radioHaveChild.checked;
-          if (data.haveChild) {
-            var childQuests = document.querySelectorAll('tr.childTable');
-            for (var i = 0; i < childQuests.length; i++) {
-              var addChildQuest = {};
-              addChildQuest.name = (() => {
-                var a = childQuests[i].getElementsByClassName('questName')[0].value;
-                if (a == '') return ' ';
-                return a;
-              })();
-              addChildQuest.description = (() => {
-                var a = childQuests[i].getElementsByClassName('questDescription')[0].value;
-                if (a == '') return ' ';
-                return a;
-              })();
-              addChildQuest.count = 0;
-              addChildQuest.maxCount = +childQuests[i].getElementsByClassName('questMaxCount')[0].value;
-              data.quests.childQuests.push(addChildQuest);
-              data.quests.maxCount += +addChildQuest.maxCount;
-            }
+        data.type = selectType.value;
+        data.quests = {};
+        data.quests.name = (() => {
+          var a = document.querySelector('.parentTable>tbody>tr>td>.questName').value;
+          if (a == '') return ' ';
+          return a;
+        })();
+        data.quests.description = (() => {
+          var a = document.querySelector('.parentTable>tbody>tr>td>.questDescription').value;
+          if (a == '') return ' ';
+          return a;
+        })();
+        data.quests.difficulty = +document.querySelector('.parentTable>tbody>tr>td>.questDifficulty').value;
+        data.quests.count = 0;
+        data.quests.maxCount = 0;
+        data.quests.childQuests = [];
+        data.haveChild = !radioHaveChild.checked;
+        if (data.haveChild) {
+          var childQuests = document.querySelectorAll('tr.childTable');
+          for (var i = 0; i < childQuests.length; i++) {
+            var addChildQuest = {};
+            addChildQuest.name = (() => {
+              var a = childQuests[i].getElementsByClassName('questName')[0].value;
+              if (a == '') return ' ';
+              return a;
+            })();
+            addChildQuest.description = (() => {
+              var a = childQuests[i].getElementsByClassName('questDescription')[0].value;
+              if (a == '') return ' ';
+              return a;
+            })();
+            addChildQuest.count = 0;
+            addChildQuest.maxCount = +childQuests[i].getElementsByClassName('questMaxCount')[0].value;
+            data.quests.childQuests.push(addChildQuest);
+            data.quests.maxCount += +addChildQuest.maxCount;
           }
-          else {
-            data.quests.maxCount = +document.querySelector('.parentTable>tbody>tr>td>.questMaxCount').value;
-          }
+        }
+        else {
+          data.quests.maxCount = +document.querySelector('.parentTable>tbody>tr>td>.questMaxCount').value;
         }
         return data;
       }
