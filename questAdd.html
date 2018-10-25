@@ -187,14 +187,212 @@
 
     <script src="https://d.line-scdn.net/liff/1.0/sdk.js" charset="utf-8"></script>
     <script type="text/javascript">
-      liff.init(
-        data => {
-          alert('ok');
-        },
-        err => {
-          alert('error');
+      var lineData;
+
+      var tabs = document.getElementsByClassName('tab');
+      var selectType = document.querySelector('.questType');
+      var radioHaveChild = document.querySelector('input.haveChild');
+
+      var childQuestAdd = document.getElementsByClassName('childQuestAdd')[0];
+      var childQuestRemove = document.getElementsByClassName('childQuestRemove')[0];
+
+      var submit = document.getElementById('submit');
+
+      var tab = 0;
+
+      tabs[0].addEventListener('click', function() {
+        clickTab(0);
+      }, false);
+      tabs[1].addEventListener('click', function() {
+        clickTab(1);
+      }, false);
+      tabs[2].addEventListener('click', function() {
+        clickTab(2);
+      }, false);
+
+      selectType.addEventListener('change', function() {
+        changeForm();
+      }, false);
+      radioHaveChild.addEventListener('change', function() {
+        changeForm();
+      }, false);
+      document.querySelectorAll('input.haveChild')[1].addEventListener('change', function() {
+        changeForm();
+      }, false);
+
+      childQuestAdd.addEventListener('click', function() {
+        if (document.querySelectorAll('tr.childTable').length >= 20) return;
+
+        var lastChild = document.querySelector('tr.childTable:nth-last-of-type(2)');
+
+        var tr = document.createElement('tr');
+        tr.setAttribute('class', 'daily normal haveChild childTable');
+        tr.innerHTML +=
+          '<td></td>' +
+          '<td>' +
+          '<table class="formTable childTable">' +
+          '<tr>' +
+          '<td>名前:</td>' +
+          '<td>' +
+          '<input type="text" class="questName">' +
+          '</td>' +
+          '</tr>' +
+          '<tr>' +
+          '<td>説明:</td>' +
+          '<td>' +
+          '<input type="text" class="questDescription">' +
+          '</td>' +
+          '</tr>' +
+          '<tr class="daily normal">' +
+          '<td>目標回数:</td>' +
+          '<td>' +
+          '<select class="questMaxCount widthHundredPercent">' +
+          '<option>1</option>' +
+          '<option>2</option>' +
+          '<option>3</option>' +
+          '<option>4</option>' +
+          '<option>5</option>' +
+          '<option>6</option>' +
+          '<option>7</option>' +
+          '<option>8</option>' +
+          '<option>9</option>' +
+          '<option>10</option>' +
+          '<option>11</option>' +
+          '<option>12</option>' +
+          '<option>13</option>' +
+          '<option>14</option>' +
+          '<option>15</option>' +
+          '<option>16</option>' +
+          '<option>17</option>' +
+          '<option>18</option>' +
+          '<option>19</option>' +
+          '<option>20</option>' +
+          '</select>' +
+          '</td>' +
+          '</tr>' +
+          '</table>' +
+          '</td>';
+
+        lastChild.parentNode.insertBefore(tr, lastChild.nextSibling);
+      }, false);
+      childQuestRemove.addEventListener('click', function() {
+        if (document.querySelectorAll('tr.childTable').length <= 1) return;
+
+
+        var lastChild = document.querySelector('tr.childTable:nth-last-of-type(2)');
+        lastChild.parentNode.removeChild(lastChild);
+      }, false);
+
+      submit.addEventListener('click', function() {
+        sendData();
+      }, false);
+
+      function clickTab (i) {
+        for (var l = 0; l < tabs.length; l++) {
+          tabs[l].classList.remove('selected');
         }
-      );
+        tabs[i].classList.add('selected');
+        tab = i;
+      }
+
+      function changeForm() {
+        var addType = selectType.value;
+        var haveChild = (function() {
+          if (radioHaveChild.checked) {
+            return 'haveChild';
+          }
+          return 'noneChild';
+        })();
+
+        var parentTRs = document.querySelectorAll('.parentTable>tbody>tr');
+        for (var i = 0; i < parentTRs.length; i++) {
+          var fitType = parentTRs[i].classList.contains(addType) || parentTRs[i].classList.contains('all');
+          var fitHaveChild = parentTRs[i].classList.contains(haveChild);
+
+          parentTRs[i].classList.remove('displayNone');
+          if (!fitType || fitHaveChild) {
+            parentTRs[i].classList.add('displayNone');
+          }
+        }
+      }
+
+      function sendData() {
+        alert('send');
+        liff.init(
+          data => {
+            alert('ok');
+            var userId = data.userData.context.userId;
+            // var userData = JSON.stringify(e);
+            var formData = createFormData();
+            if (tab = 0) {
+              // userData[formData.type].push(formData.quests);
+            }
+            liff.sendMessages([
+              {
+                type:'text',
+                text:'me'
+              }
+            ])
+            .then(() => {
+              alert('close');
+              liff.closeWindow();
+            })
+            .catch((err) => {
+              alert('sendMessages error');
+            });
+          },
+          err => {
+            alert('init error');
+          }
+        );
+      }
+
+      function createFormData() {
+        var data = {};
+        if (tab == 0) {
+          data.type = selectType.value;
+          data.quests = {};
+          data.quests.name = (() => {
+            var a = document.querySelector('.parentTable>tbody>tr>td>.questName').value;
+            if (a == '') return ' ';
+            return a;
+          })();
+          data.quests.description = (() => {
+            var a = document.querySelector('.parentTable>tbody>tr>td>.questDescription').value;
+            if (a == '') return ' ';
+            return a;
+          })();
+          data.quests.difficulty = +document.querySelector('.parentTable>tbody>tr>td>.questDifficulty').value;
+          data.quests.count = 0;
+          data.quests.maxCount = 0;
+          data.quests.childQuests = [];
+          data.haveChild = !radioHaveChild.checked;
+          if (data.haveChild) {
+            var childQuests = document.querySelectorAll('tr.childTable');
+            for (var i = 0; i < childQuests.length; i++) {
+              var addChildQuest = {};
+              addChildQuest.name = (() => {
+                var a = childQuests[i].getElementsByClassName('questName')[0].value;
+                if (a == '') return ' ';
+                return a;
+              })();
+              addChildQuest.description = (() => {
+                var a = childQuests[i].getElementsByClassName('questDescription')[0].value;
+                if (a == '') return ' ';
+                return a;
+              })();
+              addChildQuest.count = 0;
+              addChildQuest.maxCount = +childQuests[i].getElementsByClassName('questMaxCount')[0].value;
+              data.quests.childQuests.push(addChildQuest);
+              data.quests.maxCount += +addChildQuest.maxCount;
+            }
+          }
+          else {
+            data.quests.maxCount = +document.querySelector('.parentTable>tbody>tr>td>.questMaxCount').value;
+          }
+        }
+        return data;
+      }
     </script>
   </body>
 </html>
