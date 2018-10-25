@@ -308,27 +308,23 @@
         liff.init(
           data => {
             alert('ok');
-            // var userId = data.userData.context.userId;
-            // var userData = JSON.stringify(e);
             var formData = createFormData();
-            // userData[formData.type].push(formData.quests);
+            var message = createMessage(formData);
             liff.sendMessages([
               {
                 type: 'text',
-                text: JSON.stringify(formData)
+                text: message
               }
             ])
             .then(() => {
-              alert(JSON.stringify(formData));
-              alert('close');
               liff.closeWindow();
             })
             .catch((err) => {
-              alert('sendMessages error');
+              alert('error liff.sendMessages');
             });
           },
           err => {
-            alert('init error');
+            alert('error liff.init');
           }
         );
       }
@@ -376,6 +372,27 @@
           data.quests.maxCount = +document.querySelector('.parentTable>tbody>tr>td>.questMaxCount').value;
         }
         return data;
+      }
+
+      function createMessage(data) {
+        var message = (() => {
+          if (data.type == 'dailyQuests') return 'デイリークエストの追加\n';
+          if (data.type == 'normalQuests') return 'ノーマルクエストの追加\n';
+          if (data.type == 'countQuests') return 'カウントクエストの追加\n';
+        })();
+        message += data.quests.name + '\n';
+        message += data.quests.description + '\n';
+        message += data.quests.difficulty + '\n';
+        message += data.quests.count + '\n';
+        message += data.quests.maxCount + '\n';
+        for (var i = 0; i < data.quests.childQuests.length; i++) {
+          message += data.quests.childQuests[i].name + '\n';
+          message += data.quests.childQuests[i].description + '\n';
+          message += data.quests.childQuests[i].count + '\n';
+          message += data.quests.childQuests[i].maxCount + '\n';
+        }
+        message = message.replace(/(\r\n|\r|\n)+$/, '');
+        return message;
       }
     </script>
   </body>
