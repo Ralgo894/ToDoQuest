@@ -315,10 +315,11 @@
             liff.sendMessages([
               {
                 type: 'text',
-                text: JSON.stringify(formData);
+                text: JSON.stringify(formData)
               }
             ])
             .then(() => {
+              alert(JSON.stringify(formData));
               alert('close');
               liff.closeWindow();
             })
