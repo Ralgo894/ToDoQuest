@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!-- 1 -->
 <html>
   <head>
     <base target="_top">
@@ -45,65 +46,384 @@
       #submit {
         margin: 10px 0;
       }
+
+      span.title {
+        display: block;
+        color: #da3c41;
+      }
+
+      .childOp {
+        margin: 0.8rem;
+      }
+      #childAdd {
+        display: block;
+        width: 28px;
+        height: 28px;
+        float: left;
+        border: solid 1px #aaa;
+        text-align: center;
+        text-decoration: none;
+        color: #aaa;
+        font-size: 18px;
+      }
+      #childRemove {
+        display: block;
+        width: 28px;
+        height: 28px;
+        float: right;
+        border: solid 1px #aaa;
+        text-align: center;
+        text-decoration: none;
+        color: #aaa;
+        font-size: 18px;
+      }
+      #childCount {
+        display: block;
+        width: 35%;
+        height: 28px;
+        margin: auto;
+        border-bottom: solid 1px #aaa;
+        text-align: center;
+        color: #555;
+        font-size: 18px;
+      }
+
+      .children {
+        margin: 0 10%;
+      }
+      .childrenContainer {
+        margin: 0.5rem 0;
+        border: 1px solid #cccccc;
+      }
+      .child {
+        margin: 0.8rem;
+        border: 1px solid #cccccc;
+      }
+    </style>
+    <!-- ↓テキストCSS -->
+    <style media="screen">
+      .cp_iptxt {
+      	position: relative;
+      	width: 80%;
+      	margin: 40px 10%;
+      }
+      .cp_iptxt input[type='text'] {
+      	font: 16px/24px sans-serif;
+      	box-sizing: border-box;
+      	width: 100%;
+      	letter-spacing: 1px;
+      	/* padding-left: 4em; */
+      }
+      .cp_iptxt input[type='text']:focus {
+      	outline: none;
+      }
+      .ef {
+      	padding: 4px 0;
+      	border: 0;
+      	border-bottom: 1px solid #1b2538;
+      	background-color: transparent;
+      }
+      .ef ~ .focus_line {
+      	position: absolute;
+      	bottom: 0;
+      	left: 50%;
+      	width: 0;
+      	height: 2px;
+      	transition: 0.4s;
+      	background-color: #da3c41;
+      }
+      .ef ~ .focus_line {
+      	position: absolute;
+      	bottom: 0;
+      	left: 50%;
+      	width: 0;
+      	height: 2px;
+      	transition: 0.4s;
+      	background-color: #da3c41;
+      }
+      .ef:focus ~ .focus_line,
+      .cp_iptxt.ef ~ .focus_line {
+      	left: 0;
+      	width: 100%;
+      	transition: 0.4s;
+      }
+      .ef ~ label {
+      	position: absolute;
+      	z-index: -1;
+      	top: 4px;
+      	left: 0;
+      	width: 100%;
+      	transition: 0.3s;
+      	letter-spacing: 0.5px;
+      	color: #aaaaaa;
+      }
+      .ef:focus ~ label,
+      .cp_iptxt.ef ~ label,
+      .ef.focus ~ label {
+      	font-size: 12px;
+      	top: -16px;
+      	transition: 0.3s;
+      	color: #da3c41;
+      }
+    </style>
+    <!-- ↓セレクトCSS -->
+    <style media="screen">
+      .cp_ipselect {
+      	position: relative;
+      	width: 80%;
+      	margin: 2em 10%;
+      	text-align: center;
+      }
+      .cp_sl06 {
+      	position: relative;
+      	font-family: inherit;
+      	background-color: transparent;
+      	width: 100%;
+      	padding: 4px 10px 4px 0;
+      	font-size: 16px;
+      	border-radius: 0;
+      	border: none;
+      	border-bottom: 1px solid #1b2538;
+      }
+      .cp_sl06:focus {
+      	outline: none;
+      	border-bottom: 1px solid rgba(0,0,0, 0);
+      }
+      .cp_ipselect .cp_sl06 {
+      	appearance: none;
+      	-webkit-appearance:none
+      }
+      .cp_ipselect select::-ms-expand {
+      	display: none;
+      }
+      .cp_ipselect:after {
+      	position: absolute;
+      	top: 13px;
+      	right: 10px;
+      	width: 0;
+      	height: 0;
+      	padding: 0;
+      	content: '';
+      	border-left: 6px solid transparent;
+      	border-right: 6px solid transparent;
+      	border-top: 6px solid rgba(0, 0, 0, 0.3);
+      	pointer-events: none;
+      }
+      .cp_sl06_selectlabel {
+      	color: #aaaaaa;
+      	font-size: 16px;
+      	font-weight: normal;
+      	position: absolute;
+      	pointer-events: none;
+      	left: 0;
+      	top: 4px;
+      	transition: 0.3s ease all;
+      }
+      .cp_sl06:focus ~ .cp_sl06_selectlabel, .cp_sl06:valid ~ .cp_sl06_selectlabel {
+      	color: #da3c41;
+      	top: -20px;
+      	transition: 0.3s ease all;
+      	font-size: 12px;
+      }
+      .cp_sl06_selectbar {
+      	position: relative;
+      	display: block;
+      	width: 100%;
+      }
+      .cp_sl06_selectbar:before, .cp_sl06_selectbar:after {
+      	content: '';
+      	height: 2px;
+      	width: 0;
+      	bottom: 1px;
+      	position: absolute;
+      	background: #da3c41;
+      	transition: 0.3s ease all;
+      }
+      .cp_sl06_selectbar:before {
+      	left: 50%;
+      }
+      .cp_sl06_selectbar:after {
+      	right: 50%;
+      }
+      .cp_sl06:focus ~ .cp_sl06_selectbar:before, .cp_sl06:focus ~ .cp_sl06_selectbar:after {
+      	width: 50%;
+      }
+      .cp_sl06_highlight {
+      	position: absolute;
+      	top: 25%;
+      	left: 0;
+      	pointer-events: none;
+      	opacity: 0.5;
+      }
+    </style>
+    <!-- ↓ラジオボタンCSS -->
+    <style media="screen">
+      .cp_ipradio {
+      	width: 80%;
+      	margin: 2em 10%;
+      	text-align: left;
+        /* border: 1px solid #cccccc; */
+      }
+      .radioTitle {
+        display: block;
+        color: #da3c41;
+      }
+      .cp_ipradio div.ul {
+      	margin: 0.5rem 0;
+      	padding: 0.5rem 0;
+      	list-style: none;
+        display: flex;
+        border: 1px solid #cccccc;
+      }
+      .cp_ipradio .list_item {
+      	/* margin: 0.5rem 0 0 0; */
+      	padding: 0;
+      }
+      .cp_ipradio label {
+      	line-height: 135%;
+      	position: relative;
+      	margin: 0.5rem;
+      	cursor: pointer;
+      }
+      .cp_ipradio .option-input {
+      	position: relative;
+      	margin: 0 1rem 0 0;
+      	cursor: pointer;
+      }
+      .cp_ipradio .option-input:before {
+      	position: absolute;
+      	z-index: 1;
+      	top: 0;
+      	left: 0.125rem;
+      	width: 0.75rem;
+      	height: 0.75rem;
+      	content: '';
+      	-webkit-transition: -webkit-transform 0.4s cubic-bezier(0.45, 1.8, 0.5, 0.75);
+      	        transition:         transform 0.4s cubic-bezier(0.45, 1.8, 0.5, 0.75);
+      	-webkit-transform: scale(0, 0);
+      	        transform: scale(0, 0);
+      	border-radius: 50%;
+      	background: #da3c41;
+      }
+      .cp_ipradio .option-input:checked:before {
+      	-webkit-transform: scale(1, 1);
+      	        transform: scale(1, 1);
+      }
+      .cp_ipradio .option-input:after {
+      	position: absolute;
+      	top: -0.25rem;
+      	left: -0.125rem;
+      	width: 1rem;
+      	height: 1rem;
+      	content: '';
+      	border: 2px solid #f2f2f2;
+      	border-radius: 50%;
+      	background: #ffffff;
+      }
     </style>
   </head>
   <body>
-    <div class="form center">
-      <table class="formTable parentTable">
-        <tbody>
-          <tr class="all">
-            <td>種類:</td>
-            <td>
-              <select class="questType widthHundredPercent">
-                <!-- <option value="">選択してください</option> -->
-                <option value="dailyQuests">デイリー</option>
-                <option value="normalQuests">ノーマル</option>
-                <option value="countQuests">カウント</option>
-              </select>
-            </td>
-          </tr>
-          <tr class="all">
-            <td>名前:</td>
-            <td>
-              <input type="text" class="questName widthHundredPercent">
-            </td>
-          </tr>
-          <tr class="all">
-            <td>説明:</td>
-            <td>
-              <input type="text" class="questDescription widthHundredPercent">
-            </td>
-          </tr>
-          <tr class="all">
-            <td>難易度:</td>
-            <td>
-              <select class="questDifficulty widthHundredPercent">
-                <!-- <option value="">選択してください</option> -->
-                <option value="1">★</option>
-                <option value="2">★★</option>
-                <option value="3">★★★</option>
-                <option value="4">★★★★</option>
-              </select>
-            </td>
-          </tr>
-          <tr class="dailyQuests normalQuests">
-            <td>子クエスト:</td>
-            <td>
-              <label>
-                <input type="radio" class="haveChild" name="addHaveChild" checked>
-                <span>なし</span>
-              </label>
-              &nbsp;
-              <label>
-                <input type="radio" class="haveChild" name="addHaveChild">
-                <span>あり</span>
-              </label>
-            </td>
-          </tr>
-          <tr class="dailyQuests normalQuests noneChild">
-            <td>目標回数:</td>
-            <td>
-              <select class="questMaxCount widthHundredPercent">
+    <div>
+      <div class="cp_ipselect">
+        <select class="cp_sl06 questType" required>
+          <option value="" hidden disabled selected></option>
+          <option value="dailyQuests">デイリー</option>
+          <option value="normalQuests">ノーマル</option>
+          <option value="countQuests">カウント</option>
+        </select>
+        <span class="cp_sl06_highlight"></span>
+        <span class="cp_sl06_selectbar"></span>
+        <label class="cp_sl06_selectlabel">種類</label>
+      </div>
+      <div class="cp_iptxt">
+      	<input class="ef questName" type="text" placeholder="">
+      	<label>名前</label>
+      	<span class="focus_line"></span>
+      </div>
+      <div class="cp_iptxt">
+      	<input class="ef questDescription" type="text" placeholder="">
+      	<label>説明</label>
+      	<span class="focus_line"></span>
+      </div>
+      <div class="cp_ipselect">
+        <select class="cp_sl06 questDifficulty" required>
+          <option value="" hidden disabled selected></option>
+          <option value="1">★</option>
+          <option value="2">★★</option>
+          <option value="3">★★★</option>
+          <option value="4">★★★★</option>
+        </select>
+        <span class="cp_sl06_highlight"></span>
+        <span class="cp_sl06_selectbar"></span>
+        <label class="cp_sl06_selectlabel">難易度</label>
+      </div>
+      <div class="cp_ipradio">
+        <span class="title">子クエスト</span>
+      	<div class="ul">
+      		<div class="list_item">
+        		<label>
+          		<input type="radio" class="option-input"  name="cpipr05" checked>
+          		なし
+        		</label>
+      		</div>
+      		<div class="list_item">
+        		<label>
+          		<input type="radio" class="option-input" name="cpipr05">
+          		あり
+        		</label>
+      		</div>
+      	</div>
+      </div>
+      <div class="cp_ipselect">
+        <select class="cp_sl06 questDifficulty" required>
+          <option value="" hidden disabled selected></option>
+          <option>1</option>
+          <option>2</option>
+          <option>3</option>
+          <option>4</option>
+          <option>5</option>
+          <option>6</option>
+          <option>7</option>
+          <option>8</option>
+          <option>9</option>
+          <option>10</option>
+          <option>11</option>
+          <option>12</option>
+          <option>13</option>
+          <option>14</option>
+          <option>15</option>
+          <option>16</option>
+          <option>17</option>
+          <option>18</option>
+          <option>19</option>
+          <option>20</option>
+        </select>
+        <span class="cp_sl06_highlight"></span>
+        <span class="cp_sl06_selectbar"></span>
+        <label class="cp_sl06_selectlabel">目標回数</label>
+      </div>
+      <div class="children">
+        <span class="title">子クエスト</span>
+        <div id="children" class="childrenContainer">
+          <div class="childOp">
+            <a href="javascript:void(0);" id="childAdd">＋</a>
+            <a href="javascript:void(0);" id="childRemove">－</a>
+            <span id="childCount">1</span>
+          </div>
+          <div class="child">
+            <div class="cp_iptxt">
+            	<input class="ef questName" type="text" placeholder="">
+            	<label>名前</label>
+            	<span class="focus_line"></span>
+            </div>
+            <div class="cp_iptxt">
+            	<input class="ef questDescription" type="text" placeholder="">
+            	<label>説明</label>
+            	<span class="focus_line"></span>
+            </div>
+            <div class="cp_ipselect">
+              <select class="cp_sl06 questDifficulty" required>
+                <option value="" hidden disabled selected></option>
                 <option>1</option>
                 <option>2</option>
                 <option>3</option>
@@ -125,68 +445,18 @@
                 <option>19</option>
                 <option>20</option>
               </select>
-            </td>
-          </tr>
-          <tr class="dailyQuests normalQuests haveChild childTable displayNone">
-            <td></td>
-            <td>
-              <table class="formTable childTable">
-                <tr>
-                  <td>名前:</td>
-                  <td>
-                    <input type="text" class="questName">
-                  </td>
-                </tr>
-                <tr>
-                  <td>説明:</td>
-                  <td>
-                    <input type="text" class="questDescription">
-                  </td>
-                </tr>
-                <tr class="daily normal">
-                  <td>目標回数:</td>
-                  <td>
-                    <select class="questMaxCount widthHundredPercent">
-                      <option>1</option>
-                      <option>2</option>
-                      <option>3</option>
-                      <option>4</option>
-                      <option>5</option>
-                      <option>6</option>
-                      <option>7</option>
-                      <option>8</option>
-                      <option>9</option>
-                      <option>10</option>
-                      <option>11</option>
-                      <option>12</option>
-                      <option>13</option>
-                      <option>14</option>
-                      <option>15</option>
-                      <option>16</option>
-                      <option>17</option>
-                      <option>18</option>
-                      <option>19</option>
-                      <option>20</option>
-                    </select>
-                  </td>
-                </tr>
-              </table>
-            </td>
-          </tr>
-          <tr class="dailyQuests normalQuests haveChild displayNone">
-            <td></td>
-            <td style="text-align: right;">
-              <input type="button" class="childQuestAdd" value="+">
-              <input type="button" class="childQuestRemove" value="-">
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <input type="button" id="submit" value="完了">
+              <span class="cp_sl06_highlight"></span>
+              <span class="cp_sl06_selectbar"></span>
+              <label class="cp_sl06_selectlabel">目標回数</label>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <script src="https://d.line-scdn.net/liff/1.0/sdk.js" charset="utf-8"></script>
-    <script type="text/javascript">
+
+    <!-- <script src="https://d.line-scdn.net/liff/1.0/sdk.js" charset="utf-8"></script> -->
+    <!-- <script type="text/javascript">
       var lineData;
 
       var selectType = document.querySelector('.questType');
@@ -304,12 +574,8 @@
       }
 
       function sendData() {
-        // var formData = createFormData();
-        // var message = createMessage(formData);
-        // console.log(message);
         liff.init(
           data => {
-            alert('ok');
             var formData = createFormData();
             var message = createMessage(formData);
             liff.sendMessages([
@@ -400,6 +666,6 @@
         message = message.replace(/(\r\n|\r|\n)+$/, '');
         return message;
       }
-    </script>
+    </script> -->
   </body>
 </html>
