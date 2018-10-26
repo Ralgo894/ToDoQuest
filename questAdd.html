@@ -647,6 +647,8 @@
         if (data.quests.description == '') data.errorList.push('クエストの説明を入力してください');
         if (data.quests.difficulty == 0) data.errorList.push('クエストの難易度を選択してください');
 
+        if (data.type == 'countQuests') return data;
+
         data.quests.childQuests = [];
         data.haveChild = (() => {
           if (radioHaveChild.checked == radioNoneChild.checked) {
