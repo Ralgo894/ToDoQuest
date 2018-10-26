@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width">
     <title>クエストの設定</title>
     <style media="screen">
-
       body {
         font-family: 'Hiragino Kaku Gothic ProN', 'ヒラギノ角ゴ ProN W3', Meiryo, メイリオ, Osaka, 'MS PGothic', arial, helvetica, sans-serif;
 
@@ -20,39 +19,34 @@
         align-items: center;
         justify-content: center;
       }
-      .textCenter {
-        text-align: center;
-      }
-      .flex {
-        display: flex;
-      }
       .displayNone {
         display: none;
       }
-      .widthHundredPercent {
+
+      #modalContent {
+        position: fixed;
+        width: 80%;
+        margin: 5%;
+        padding: 20px;
+        background: #fff;
+        z-index: 2;
+      }
+      #modalOverlay {
+        z-index: 1;
+        position: fixed;
+        top: 0;
+        left: 0;
         width: 100%;
-      }
-
-      .form {
-        padding: 8px;
-      }
-
-      .formTable.parentTable {
-        width: 90%;
-      }
-      .formTable tr td:nth-child(1) {
-        text-align: right;
-      }
-
-      .childTable {
-        border: solid 1px #aaa;
-      }
-
-      #submit {
-        margin: 10px 0;
+        height: 120%;
+        background-color: rgba(0,0,0,.4);
       }
 
       span.title {
+        display: block;
+        color: #aaa;
+        transition: 0.3s;
+      }
+      span.title.color {
         display: block;
         color: #da3c41;
       }
@@ -104,6 +98,17 @@
         margin: 0.8rem;
         border: 1px solid #cccccc;
       }
+
+      #submit {
+        display: block;
+        width: 35%;
+        margin: 20px auto;
+        border: solid 1px #aaa;
+        text-align: center;
+        text-decoration: none;
+        color: #444;
+        font-size: 20px;
+      }
     </style>
     <!-- ↓テキストCSS -->
     <style media="screen">
@@ -126,17 +131,8 @@
       .ef {
       	padding: 4px 0;
       	border: 0;
-      	border-bottom: 1px solid #1b2538;
+      	border-bottom: 1px solid #aaa;
       	background-color: transparent;
-      }
-      .ef ~ .focus_line {
-      	position: absolute;
-      	bottom: 0;
-      	left: 50%;
-      	width: 0;
-      	height: 2px;
-      	transition: 0.4s;
-      	background-color: #da3c41;
       }
       .ef ~ .focus_line {
       	position: absolute;
@@ -148,7 +144,8 @@
       	background-color: #da3c41;
       }
       .ef:focus ~ .focus_line,
-      .cp_iptxt.ef ~ .focus_line {
+      .cp_iptxt.ef ~ .focus_line,
+      .ef.focus ~ .focus_line {
       	left: 0;
       	width: 100%;
       	transition: 0.4s;
@@ -189,11 +186,12 @@
       	font-size: 16px;
       	border-radius: 0;
       	border: none;
-      	border-bottom: 1px solid #1b2538;
+      	border-bottom: 1px solid #aaa;
       }
-      .cp_sl06:focus {
+      .cp_sl06:focus,
+      .cp_sl06.focus {
       	outline: none;
-      	border-bottom: 1px solid rgba(0,0,0, 0);
+      	border-bottom: 1px solid rgba(0,0,0,0);
       }
       .cp_ipselect .cp_sl06 {
       	appearance: none;
@@ -225,7 +223,8 @@
       	top: 4px;
       	transition: 0.3s ease all;
       }
-      .cp_sl06:focus ~ .cp_sl06_selectlabel, .cp_sl06:valid ~ .cp_sl06_selectlabel {
+      .cp_sl06:focus ~ .cp_sl06_selectlabel,
+      .cp_sl06:valid ~ .cp_sl06_selectlabel {
       	color: #da3c41;
       	top: -20px;
       	transition: 0.3s ease all;
@@ -236,7 +235,8 @@
       	display: block;
       	width: 100%;
       }
-      .cp_sl06_selectbar:before, .cp_sl06_selectbar:after {
+      .cp_sl06_selectbar:before,
+      .cp_sl06_selectbar:after {
       	content: '';
       	height: 2px;
       	width: 0;
@@ -251,7 +251,10 @@
       .cp_sl06_selectbar:after {
       	right: 50%;
       }
-      .cp_sl06:focus ~ .cp_sl06_selectbar:before, .cp_sl06:focus ~ .cp_sl06_selectbar:after {
+      .cp_sl06:focus ~ .cp_sl06_selectbar:before,
+      .cp_sl06:focus ~ .cp_sl06_selectbar:after,
+      .cp_sl06.focus ~ .cp_sl06_selectbar:before,
+      .cp_sl06.focus ~ .cp_sl06_selectbar:after {
       	width: 50%;
       }
       .cp_sl06_highlight {
@@ -270,16 +273,13 @@
       	text-align: left;
         /* border: 1px solid #cccccc; */
       }
-      .radioTitle {
-        display: block;
-        color: #da3c41;
-      }
+
       .cp_ipradio div.ul {
       	margin: 0.5rem 0;
       	padding: 0.5rem 0;
       	list-style: none;
         display: flex;
-        border: 1px solid #cccccc;
+        border: 1px solid #aaa;
       }
       .cp_ipradio .list_item {
       	/* margin: 0.5rem 0 0 0; */
@@ -329,9 +329,14 @@
     </style>
   </head>
   <body>
-    <div>
-      <div class="cp_ipselect">
-        <select class="cp_sl06 questType" required>
+    <div id="modalContainer" class="displayNone">
+      <div id="modalOverlay"></div>
+      <div id="modalContent"></div>
+    </div>
+
+    <div id="form">
+      <div class="all cp_ipselect">
+        <select id="questType" class="cp_sl06" required onchange="lockInputText(this)">
           <option value="" hidden disabled selected></option>
           <option value="dailyQuests">デイリー</option>
           <option value="normalQuests">ノーマル</option>
@@ -341,18 +346,18 @@
         <span class="cp_sl06_selectbar"></span>
         <label class="cp_sl06_selectlabel">種類</label>
       </div>
-      <div class="cp_iptxt">
-      	<input class="ef questName" type="text" placeholder="">
+      <div class="all cp_iptxt">
+      	<input id="questName" class="ef" type="text" placeholder="" onchange="lockInputText(this)">
       	<label>名前</label>
       	<span class="focus_line"></span>
       </div>
-      <div class="cp_iptxt">
-      	<input class="ef questDescription" type="text" placeholder="">
+      <div class="all cp_iptxt">
+      	<input id="questDescription" class="ef" type="text" placeholder="" onchange="lockInputText(this)">
       	<label>説明</label>
       	<span class="focus_line"></span>
       </div>
-      <div class="cp_ipselect">
-        <select class="cp_sl06 questDifficulty" required>
+      <div class="all cp_ipselect">
+        <select id="questDifficulty" class="cp_sl06" required onchange="lockInputText(this)">
           <option value="" hidden disabled selected></option>
           <option value="1">★</option>
           <option value="2">★★</option>
@@ -363,25 +368,25 @@
         <span class="cp_sl06_selectbar"></span>
         <label class="cp_sl06_selectlabel">難易度</label>
       </div>
-      <div class="cp_ipradio">
+      <div class="dailyQuests normalQuests cp_ipradio">
         <span class="title">子クエスト</span>
       	<div class="ul">
       		<div class="list_item">
         		<label>
-          		<input type="radio" class="option-input"  name="cpipr05" checked>
+          		<input type="radio" id="noneChild" class="option-input" name="cpipr05">
           		なし
         		</label>
       		</div>
       		<div class="list_item">
         		<label>
-          		<input type="radio" class="option-input" name="cpipr05">
+          		<input type="radio" id="haveChild" class="option-input" name="cpipr05">
           		あり
         		</label>
       		</div>
       	</div>
       </div>
-      <div class="cp_ipselect">
-        <select class="cp_sl06 questDifficulty" required>
+      <div class="dailyQuests normalQuests noneChild cp_ipselect">
+        <select id="questMaxCount" class="cp_sl06" required onchange="lockInputText(this)">
           <option value="" hidden disabled selected></option>
           <option>1</option>
           <option>2</option>
@@ -408,8 +413,8 @@
         <span class="cp_sl06_selectbar"></span>
         <label class="cp_sl06_selectlabel">目標回数</label>
       </div>
-      <div class="children">
-        <span class="title">子クエスト</span>
+      <div class="dailyQuests normalQuests haveChild children displayNone">
+        <span class="title color">子クエスト</span>
         <div id="children" class="childrenContainer">
           <div class="childOp">
             <a href="javascript:void(0);" id="childAdd">＋</a>
@@ -418,17 +423,17 @@
           </div>
           <div class="child">
             <div class="cp_iptxt">
-            	<input class="ef questName" type="text" placeholder="">
-            	<label>名前</label>
-            	<span class="focus_line"></span>
+              <input class="ef questName" type="text" placeholder="" onchange="lockInputText(this)">
+              <label>名前</label>
+              <span class="focus_line"></span>
             </div>
             <div class="cp_iptxt">
-            	<input class="ef questDescription" type="text" placeholder="">
-            	<label>説明</label>
-            	<span class="focus_line"></span>
+              <input class="ef questDescription" type="text" placeholder="" onchange="lockInputText(this)">
+              <label>説明</label>
+              <span class="focus_line"></span>
             </div>
             <div class="cp_ipselect">
-              <select class="cp_sl06 questDifficulty" required>
+              <select class="cp_sl06 questMaxCount" required onchange="lockInputText(this)">
                 <option value="" hidden disabled selected></option>
                 <option>1</option>
                 <option>2</option>
@@ -458,177 +463,207 @@
           </div>
         </div>
       </div>
+      <div class="all">
+        <a href="javascript:void(0);" id="submit">完了</a>
+      </div>
     </div>
 
 
-    <!-- <script src="https://d.line-scdn.net/liff/1.0/sdk.js" charset="utf-8"></script> -->
-    <!-- <script type="text/javascript">
-      var lineData;
+    <script src="https://d.line-scdn.net/liff/1.0/sdk.js" charset="utf-8"></script>
+    <script type="text/javascript">
+      var modalContainer = document.getElementById('modalContainer');
+      var modalOverlay = document.getElementById('modalOverlay');
 
-      var selectType = document.querySelector('.questType');
-      var radioHaveChild = document.querySelector('input.haveChild');
+      var selectType = document.getElementById('questType');
+      var radioNoneChild = document.getElementById('noneChild');
+      var radioHaveChild = document.getElementById('haveChild');
 
-      var childQuestAdd = document.getElementsByClassName('childQuestAdd')[0];
-      var childQuestRemove = document.getElementsByClassName('childQuestRemove')[0];
+      var childQuestAdd = document.getElementById('childAdd');
+      var childQuestRemove = document.getElementById('childRemove');
 
       var submit = document.getElementById('submit');
+
+      modalOverlay.addEventListener('click', () => {
+        modalContainer.classList.add('displayNone');
+      });
 
       selectType.addEventListener('change', function() {
         changeForm();
       }, false);
+      radioNoneChild.addEventListener('change', function() {
+        changeForm();
+        var title = document.getElementById('noneChild').parentNode.parentNode.parentNode.previousElementSibling;
+        title.classList.add('color');
+      }, false);
       radioHaveChild.addEventListener('change', function() {
         changeForm();
-      }, false);
-      document.querySelectorAll('input.haveChild')[1].addEventListener('change', function() {
-        changeForm();
+        var title = document.getElementById('noneChild').parentNode.parentNode.parentNode.previousElementSibling;
+        title.classList.add('color');
       }, false);
 
       childQuestAdd.addEventListener('click', function() {
-        if (document.querySelectorAll('tr.childTable').length >= 20) return;
+        if (document.querySelectorAll('#children .child').length >= 20) return;
+        var child = document.createElement('div');
+        child.classList.add('child');
+        child.innerHTML +=
+          '<div class="cp_iptxt">' +
+          '  <input class="ef questName" type="text" placeholder="" onchange="lockInputText(this)">' +
+          '  <label>名前</label>' +
+          '  <span class="focus_line"></span>' +
+          '</div>' +
+          '<div class="cp_iptxt">' +
+          '  <input class="ef questDescription" type="text" placeholder="" onchange="lockInputText(this)">' +
+          '  <label>説明</label>' +
+          '  <span class="focus_line"></span>' +
+          '</div>' +
+          '<div class="cp_ipselect">' +
+          '  <select class="cp_sl06 questMaxCount" required onchange="lockInputText(this)">' +
+          '    <option value="" hidden disabled selected></option>' +
+          '    <option>1</option>' +
+          '    <option>2</option>' +
+          '    <option>3</option>' +
+          '    <option>4</option>' +
+          '    <option>5</option>' +
+          '    <option>6</option>' +
+          '    <option>7</option>' +
+          '    <option>8</option>' +
+          '    <option>9</option>' +
+          '    <option>10</option>' +
+          '    <option>11</option>' +
+          '    <option>12</option>' +
+          '    <option>13</option>' +
+          '    <option>14</option>' +
+          '    <option>15</option>' +
+          '    <option>16</option>' +
+          '    <option>17</option>' +
+          '    <option>18</option>' +
+          '    <option>19</option>' +
+          '    <option>20</option>' +
+          '  </select>' +
+          '  <span class="cp_sl06_highlight"></span>' +
+          '  <span class="cp_sl06_selectbar"></span>' +
+          '  <label class="cp_sl06_selectlabel">目標回数</label>' +
+          '</div>';
 
-        var lastChild = document.querySelector('tr.childTable:nth-last-of-type(2)');
-
-        var tr = document.createElement('tr');
-        tr.setAttribute('class', 'daily normal haveChild childTable');
-        tr.innerHTML +=
-          '<td></td>' +
-          '<td>' +
-          '<table class="formTable childTable">' +
-          '<tr>' +
-          '<td>名前:</td>' +
-          '<td>' +
-          '<input type="text" class="questName">' +
-          '</td>' +
-          '</tr>' +
-          '<tr>' +
-          '<td>説明:</td>' +
-          '<td>' +
-          '<input type="text" class="questDescription">' +
-          '</td>' +
-          '</tr>' +
-          '<tr class="daily normal">' +
-          '<td>目標回数:</td>' +
-          '<td>' +
-          '<select class="questMaxCount widthHundredPercent">' +
-          '<option>1</option>' +
-          '<option>2</option>' +
-          '<option>3</option>' +
-          '<option>4</option>' +
-          '<option>5</option>' +
-          '<option>6</option>' +
-          '<option>7</option>' +
-          '<option>8</option>' +
-          '<option>9</option>' +
-          '<option>10</option>' +
-          '<option>11</option>' +
-          '<option>12</option>' +
-          '<option>13</option>' +
-          '<option>14</option>' +
-          '<option>15</option>' +
-          '<option>16</option>' +
-          '<option>17</option>' +
-          '<option>18</option>' +
-          '<option>19</option>' +
-          '<option>20</option>' +
-          '</select>' +
-          '</td>' +
-          '</tr>' +
-          '</table>' +
-          '</td>';
-
-        lastChild.parentNode.insertBefore(tr, lastChild.nextSibling);
+        var children = document.getElementById('children');
+        children.appendChild(child);
+        document.getElementById('childCount').textContent = document.querySelectorAll('#children .child').length;
       }, false);
       childQuestRemove.addEventListener('click', function() {
-        if (document.querySelectorAll('tr.childTable').length <= 1) return;
+        if (document.querySelectorAll('#children .child').length <= 1) return;
 
-
-        var lastChild = document.querySelector('tr.childTable:nth-last-of-type(2)');
+        var lastChild = document.querySelector('#children .child:nth-last-of-type(1)');
         lastChild.parentNode.removeChild(lastChild);
+        document.getElementById('childCount').textContent = document.querySelectorAll('#children .child').length;
       }, false);
 
       submit.addEventListener('click', function() {
         sendData();
       }, false);
 
-      function clickTab (i) {
-        for (var l = 0; l < tabs.length; l++) {
-          tabs[l].classList.remove('selected');
+      function lockInputText(e) {
+        if (e.value == '') {
+          e.classList.remove('focus');
         }
-        tabs[i].classList.add('selected');
-        tab = i;
+        else {
+          e.classList.add('focus');
+        }
       }
 
       function changeForm() {
         var addType = selectType.value;
+        if (addType == '') return;
+
         var haveChild = (function() {
-          if (radioHaveChild.checked) {
+          if (!radioHaveChild.checked) {
             return 'haveChild';
           }
           return 'noneChild';
         })();
 
-        var parentTRs = document.querySelectorAll('.parentTable>tbody>tr');
-        for (var i = 0; i < parentTRs.length; i++) {
-          var fitType = parentTRs[i].classList.contains(addType) || parentTRs[i].classList.contains('all');
-          var fitHaveChild = parentTRs[i].classList.contains(haveChild);
+        var formChildren = document.querySelectorAll('#form>div');
+        for (var i = 0; i < formChildren.length; i++) {
+          var fitType = formChildren[i].classList.contains(addType) || formChildren[i].classList.contains('all');
+          var fitHaveChild = formChildren[i].classList.contains(haveChild);
 
-          parentTRs[i].classList.remove('displayNone');
+          formChildren[i].classList.remove('displayNone');
           if (!fitType || fitHaveChild) {
-            parentTRs[i].classList.add('displayNone');
+            formChildren[i].classList.add('displayNone');
           }
         }
       }
 
       function sendData() {
-        liff.init(
-          data => {
-            var formData = createFormData();
-            var message = createMessage(formData);
-            liff.sendMessages([
-              {
-                type: 'text',
-                text: message
-              }
-            ])
-            .then(() => {
-              liff.closeWindow();
-            })
-            .catch((err) => {
-              alert('error liff.sendMessages');
+        var formData = createFormData();
+        if (formData.errorList.length == 0) {
+          var message = createMessage(formData);
+          liff.init(
+            data => {
+              liff.sendMessages([
+                {
+                  type: 'text',
+                  text: message
+                }
+              ])
+              .then(() => {
+                liff.closeWindow();
+              })
+              .catch((err) => {
+                alert('error liff.sendMessages');
+              });
+            },
+            err => {
+              alert('error liff.init');
+            }
+          );
+        }
+        else {
+          var modalContent = document.getElementById('modalContent');
+          modalContent.innerHTML = '';
+          modalContent.innerHTML += (() => {
+            var html = '';
+            formData.errorList.forEach(e => {
+              html += '<p>' + e + '</p>';
             });
-          },
-          err => {
-            alert('error liff.init');
-          }
-        );
+            return html;
+          })();
+          modalContainer.classList.remove('displayNone');
+        }
       }
 
       function createFormData() {
         var data = {};
         data.type = selectType.value;
+        data.errorList = [];
+
         data.quests = {};
-        data.quests.name = (() => {
-          var a = document.querySelector('.parentTable>tbody>tr>td>.questName').value;
-          if (a == '') return ' ';
-          return a;
-        })();
-        data.quests.description = (() => {
-          var a = document.querySelector('.parentTable>tbody>tr>td>.questDescription').value;
-          if (a == '') return ' ';
-          return a;
-        })();
-        data.quests.difficulty = +document.querySelector('.parentTable>tbody>tr>td>.questDifficulty').value;
-        data.quests.count = 0;
+        data.quests.name = document.getElementById('questName').value;
+        data.quests.description = document.getElementById('questDescription').value;
+        data.quests.difficulty = +document.getElementById('questDifficulty').value;
         data.quests.maxCount = 0;
+
+        if (!data.type) data.errorList.push('クエストの種類を選択してください');
+        if (data.quests.name == '') data.errorList.push('クエストの名前を入力してください');
+        if (data.quests.description == '') data.errorList.push('クエストの説明を入力してください');
+        if (data.quests.difficulty == 0) data.errorList.push('クエストの難易度を選択してください');
+
         data.quests.childQuests = [];
-        data.haveChild = !radioHaveChild.checked;
+        data.haveChild = (() => {
+          if (radioHaveChild.checked == radioNoneChild.checked) {
+            data.errorList.push('子クエストの有無を選択してください');
+            return false;
+          }
+          else {
+            return radioHaveChild.checked;
+          }
+        })();;
         if (data.haveChild) {
-          var childQuests = document.querySelectorAll('tr.childTable');
+          var childQuests = document.querySelectorAll('#children .child');
           for (var i = 0; i < childQuests.length; i++) {
             var addChildQuest = {};
             addChildQuest.name = (() => {
               var a = childQuests[i].getElementsByClassName('questName')[0].value;
-              if (a == '') return ' ';
+              if (a == '') data.errorList.push('子クエスト' + (i + 1) + 'の名前を入力してください');
               return a;
             })();
             addChildQuest.description = (() => {
@@ -636,23 +671,26 @@
               if (a == '') return ' ';
               return a;
             })();
-            addChildQuest.count = 0;
             addChildQuest.maxCount = +childQuests[i].getElementsByClassName('questMaxCount')[0].value;
+            if (addChildQuest.maxCount == 0) data.errorList.push('子クエスト' + (i + 1) + 'の目標回数を選択してください');
+
             data.quests.childQuests.push(addChildQuest);
             data.quests.maxCount += +addChildQuest.maxCount;
           }
         }
         else {
-          data.quests.maxCount = +document.querySelector('.parentTable>tbody>tr>td>.questMaxCount').value;
+          data.quests.maxCount = +document.getElementById('questMaxCount').value;
+          if (data.quests.difficulty == 0) data.errorList.push('クエストの目標回数を選択してください');
         }
+
         return data;
       }
 
       function createMessage(data) {
         var message = (() => {
-          if (data.type == 'dailyQuests') return 'デイリークエストの追加\n';
-          if (data.type == 'normalQuests') return 'ノーマルクエストの追加\n';
-          if (data.type == 'countQuests') return 'カウントクエストの追加\n';
+          if (data.type == 'dailyQuests') return '<デイリークエストの追加>\n';
+          if (data.type == 'normalQuests') return '<ノーマルクエストの追加>\n';
+          if (data.type == 'countQuests') return '<カウントクエストの追加>\n';
         })();
         message += '　　名前 : ' + data.quests.name + '\n';
         message += '　　説明 : ' + data.quests.description + '\n';
@@ -664,7 +702,7 @@
           return '目標回数 : ' + data.quests.maxCount + '\n';
         })();
         for (var i = 0; i < data.quests.childQuests.length; i++) {
-          message += '子クエスト' + (i + 1) + '\n';
+          message += '<子クエスト' + (i + 1) + '>\n';
           message += '　　名前 : ' + data.quests.childQuests[i].name + '\n';
           message += '　　説明 : ' + data.quests.childQuests[i].description + '\n';
           message += '目標回数 : ' + data.quests.childQuests[i].maxCount + '\n';
@@ -672,6 +710,6 @@
         message = message.replace(/(\r\n|\r|\n)+$/, '');
         return message;
       }
-    </script> -->
+    </script>
   </body>
 </html>
