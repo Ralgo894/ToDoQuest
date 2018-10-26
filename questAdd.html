@@ -641,6 +641,7 @@
         data.quests.description = document.getElementById('questDescription').value;
         data.quests.difficulty = +document.getElementById('questDifficulty').value;
         data.quests.maxCount = 0;
+        data.quests.childQuests = [];
 
         if (!data.type) data.errorList.push('クエストの種類を選択してください');
         if (data.quests.name == '') data.errorList.push('クエストの名前を入力してください');
@@ -649,7 +650,6 @@
 
         if (data.type == 'countQuests') return data;
 
-        data.quests.childQuests = [];
         data.haveChild = (() => {
           if (radioHaveChild.checked == radioNoneChild.checked) {
             data.errorList.push('子クエストの有無を選択してください');
